@@ -2,7 +2,7 @@ const request = require("supertest");
 const app = require("../app");
 const db = require("../db/connection");
 const data = require("../db/data/test-data/index");
-const { seed } = require("../db/seeds/seed");
+const seed = require("../db/seeds/seed");
 
 beforeEach(() => {
     return seed(data);
@@ -13,5 +13,20 @@ afterAll(() => {
 });
 
 describe("GET /api/categories", () => {
-    test("200: accepts GET request and displays an array of category objects with a slug and description property", () => {});
+    test("200: Responds with an array of category objects with a slug and description property", () => {
+        return request(app)
+            .get("/api/categories")
+            .expect(200)
+            .then(({ body }) => {
+                const { categories } = body;
+                expect(categories).toBeInstanceOf(Array);
+                expect(categories).toHaveLength(4);
+                categories.forEach((category) => {
+                    expect.objectContaining({
+                        slug: expect.any(String),
+                        description: expect.any(String),
+                    });
+                });
+            });
+    });
 });
