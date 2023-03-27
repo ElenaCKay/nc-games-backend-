@@ -31,12 +31,13 @@ describe("GET /api/categories", () => {
     });
 });
 
-// describe.only("GET /api/reviews/:review_id", () => {
+// describe("GET /api/reviews/:review_id", () => {
 //     test("200: Responds with an object with the corresponding review_id", () => {
 //         return request(app)
 //             .get("/api/reviews?review_id=1")
 //             .expect(200)
 //             .then(({ body }) => {
+//                 console.log(body);
 //                 const { reviews } = body;
 //                 expect(reviews).toHaveLength(1);
 //                 reviews.forEach((review) => {
