@@ -29,4 +29,12 @@ describe("GET /api/categories", () => {
                 });
             });
     });
+    test('404: Returns an error message Not Found when an endpoint is not specified', () => {
+        return request(app)
+        .get('/api/categories/incorrectendpoint')
+        .expect(404)
+        .then(({body: {msg}}) => {
+            expect(msg).toBe('Not found')
+        })
+    })
 });
