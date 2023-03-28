@@ -37,7 +37,6 @@ describe("GET /api with wrong endpoint", () => {
             .get("/api/categories/incorrectendpoint")
             .expect(404)
             .then(({ body }) => {
-                console.log(body);
                 expect(body.msg).toBe("Not found");
             });
     });
@@ -89,11 +88,11 @@ describe("GET /api/reviews", () => {
             .expect(200)
             .then(({ body }) => {
                 const { reviews } = body;
+                expect(reviews).toHaveLength(13);
                 reviews.forEach((review) => {
                     expect(review).toMatchObject({
                         review_id: expect.any(Number),
                         title: expect.any(String),
-                        review_body: expect.any(String),
                         designer: expect.any(String),
                         review_img_url: expect.any(String),
                         votes: expect.any(Number),
@@ -102,11 +101,16 @@ describe("GET /api/reviews", () => {
                         comment_count: expect.any(Number),
                     });
                 });
+            });
+    });
+    test("200: Responds with array of objects sorted by date in descending order", () => {
+        return request(app)
+            .get("/api/reviews")
+            .expect(200)
+            .then(({ body }) => {
+                const { reviews } = body;
                 const reviewsCopy = [...reviews];
-                const sortedReviews = reviewsCopy.sort((reviewA, reviewB) => {
-                    return reviewA.created_at - reviewB.created_at;
-                });
-                expect(reviews).toEqual(sortedReviews);
+                expect(reviewsCopy).toBeSorted({ descending: true });
             });
     });
 });

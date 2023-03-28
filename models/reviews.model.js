@@ -13,13 +13,13 @@ exports.selectReview = (reviewId) => {
 exports.fetchReviews = () => {
     return db
         .query(
-            `SELECT reviews.title, reviews.review_id, reviews.review_body, reviews.designer, reviews.review_img_url, reviews.votes, reviews.category, 
+            `SELECT reviews.title, reviews.review_id, reviews.designer, reviews.review_img_url, reviews.votes, reviews.category, 
             reviews.owner, reviews.created_at, 
             CAST(COUNT(comments.review_id) AS INT) as comment_count
             FROM reviews
             LEFT JOIN comments
             ON reviews.review_id = comments.review_id
-            GROUP BY title, reviews.review_id, reviews.review_body, reviews.designer, reviews.review_img_url, reviews.votes, reviews.category, 
+            GROUP BY title, reviews.review_id, reviews.designer, reviews.review_img_url, reviews.votes, reviews.category, 
             reviews.owner, reviews.created_at       
             ORDER BY reviews.created_at DESC;`
         )
