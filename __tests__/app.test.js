@@ -110,7 +110,7 @@ describe("GET /api/reviews", () => {
             .then(({ body }) => {
                 const { reviews } = body;
                 const reviewsCopy = [...reviews];
-                expect(reviewsCopy).toBeSorted({ descending: true });
+                expect(reviewsCopy).toBeSortedBy('created_at', { descending: true });
             });
     });
 });
