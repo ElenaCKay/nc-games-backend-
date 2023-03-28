@@ -1,4 +1,4 @@
-const { selectReview } = require("../models/reviews.model");
+const { selectReview, fetchReviews } = require("../models/reviews.model");
 
 exports.getReviewById = (req, res, next) => {
     const { review_id } = req.params;
@@ -8,6 +8,15 @@ exports.getReviewById = (req, res, next) => {
             res.status(200).send({ review });
         })
         .catch((err) => {
-            next(err)
+            next(err);
         });
+};
+
+exports.getReviews = (req, res, next) => {
+    fetchReviews().then((reviews) => {
+        res.status(200).send({ reviews });
+    })
+    .catch((err) => {
+        next(err)
+    })
 };
