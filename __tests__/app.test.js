@@ -102,6 +102,11 @@ describe("GET /api/reviews", () => {
                         comment_count: expect.any(Number),
                     });
                 });
+                const reviewsCopy = [...reviews];
+                const sortedReviews = reviewsCopy.sort((reviewA, reviewB) => {
+                    return reviewA.created_at - reviewB.created_at;
+                });
+                expect(reviews).toEqual(sortedReviews);
             });
     });
 });
