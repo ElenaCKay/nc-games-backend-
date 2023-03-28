@@ -63,7 +63,7 @@ describe("GET /api/reviews/:review_id", () => {
                 };
             });
     });
-    test("400: responds with a bad request for an invalid category ID", () => {
+    test("400: responds with a bad request for an invalid review ID", () => {
         return request(app)
             .get("/api/reviews/not-a-num")
             .expect(400)
@@ -71,7 +71,7 @@ describe("GET /api/reviews/:review_id", () => {
                 expect(body.msg).toBe("Invalid ID");
             });
     });
-    test("404: GET response for a valid but non existant category ID", () => {
+    test("404: GET response for a valid but non existant review ID", () => {
         return request(app)
             .get("/api/reviews/1000")
             .expect(404)
@@ -129,7 +129,7 @@ describe.only("GET /api/reviews/:review_id/comments", () => {
                         created_at: expect.any(String),
                         author: expect.any(String),
                         body: expect.any(String),
-                        review_id: expect.any(Number)
+                        review_id: expect.any(Number),
                     });
                 });
             });
@@ -141,6 +141,22 @@ describe.only("GET /api/reviews/:review_id/comments", () => {
             .then(({ body }) => {
                 const { comments } = body;
                 expect(comments).toBeSortedBy("created_at", { descending: true });
+            });
+    });
+    test("400: responds with a bad request for an invalid review ID", () => {
+        return request(app)
+            .get("/api/reviews/not-a-num/comments")
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid ID");
+            });
+    });
+    test("404: GET response for a valid but non existant review ID", () => {
+        return request(app)
+            .get("/api/reviews/1000/comments")
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Not found");
             });
     });
 });

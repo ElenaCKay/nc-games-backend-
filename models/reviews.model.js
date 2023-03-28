@@ -35,6 +35,9 @@ exports.selectCommentsById = (review_id) => {
         ORDER BY created_at DESC;`, [review_id]
     )
     .then((result) => {
+        if (result.rowCount === 0) {
+            return Promise.reject({ status: 404, msg: "Not found" });
+        }
         return result.rows
     })
 }
