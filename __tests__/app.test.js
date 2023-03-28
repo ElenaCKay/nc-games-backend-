@@ -49,7 +49,6 @@ describe("GET /api/reviews/:review_id", () => {
             .get("/api/reviews/1")
             .expect(200)
             .then(({ body }) => {
-                console.log(body);
                 const { review } = body;
                 (review) => {
                     expect.objectContaining({
