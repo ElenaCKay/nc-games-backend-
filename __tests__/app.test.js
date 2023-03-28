@@ -37,11 +37,11 @@ describe("GET /api with wrong endpoint", () => {
             .get("/api/categories/incorrectendpoint")
             .expect(404)
             .then(({ body }) => {
-                console.log(body)
+                console.log(body);
                 expect(body.msg).toBe("Not found");
             });
     });
-})
+});
 
 describe("GET /api/reviews/:review_id", () => {
     test("200: Responds with an object with the corresponding review_id", () => {
@@ -51,7 +51,7 @@ describe("GET /api/reviews/:review_id", () => {
             .then(({ body }) => {
                 const { review } = body;
                 (review) => {
-                    expect.objectContaining({
+                    expect(review).toMatchObject({
                         review_id: 1,
                         title: expect.any(String),
                         review_body: expect.any(String),
@@ -78,6 +78,36 @@ describe("GET /api/reviews/:review_id", () => {
             .expect(404)
             .then(({ body }) => {
                 expect(body.msg).toBe("Not found");
+            });
+    });
+});
+
+//Needs comment count which coutns all the comments with the review ID
+// describe("Function findCommentCount", () => {
+
+// })
+
+describe("GET /api/reviews", () => {
+    test("200: Responds with an array of review objects", () => {
+        return request(app)
+            .get("/api/reviews")
+            .expect(200)
+            .then(({ body }) => {
+                const { reviews } = body;
+                reviews.forEach((review) => {
+                    //console.log(review);
+                    expect(review).toMatchObject({
+                        review_id: expect.any(Number),
+                        title: expect.any(String),
+                        review_body: expect.any(String),
+                        designer: expect.any(String),
+                        review_img_url: expect.any(String),
+                        votes: expect.any(Number),
+                        category: expect.any(String),
+                        owner: expect.any(String),
+                        comment_count: expect.any(Number),
+                    });
+                });
             });
     });
 });
