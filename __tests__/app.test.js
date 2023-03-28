@@ -113,3 +113,34 @@ describe("GET /api/reviews", () => {
             });
     });
 });
+
+describe.only("GET /api/reviews/:review_id/comments", () => {
+    test("200: Responds with an array of comments", () => {
+        return request(app)
+            .get("/api/reviews/3/comments")
+            .expect(200)
+            .then(({ body }) => {
+                const { comments } = body;
+                expect(comments).toHaveLength(3);
+                comments.forEach((comment) => {
+                    expect(comment).toMatchObject({
+                        comment_id: expect.any(Number),
+                        votes: expect.any(Number),
+                        created_at: expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        review_id: expect.any(Number)
+                    });
+                });
+            });
+    });
+    test("200: Responds with array of comments sorted by most recent first", () => {
+        return request(app)
+            .get("/api/reviews/3/comments")
+            .expect(200)
+            .then(({ body }) => {
+                const { comments } = body;
+                expect(comments).toBeSortedBy("created_at", { descending: true });
+            });
+    });
+});
