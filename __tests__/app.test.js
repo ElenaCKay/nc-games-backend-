@@ -29,25 +29,29 @@ describe("GET /api/categories", () => {
                 });
             });
     });
+});
+
+describe("GET /api with wrong endpoint", () => {
     test("404: Returns an error message Not Found when an endpoint is not specified", () => {
         return request(app)
             .get("/api/categories/incorrectendpoint")
             .expect(404)
-            .then(({ body: { msg } }) => {
-                expect(msg).toBe("Not found");
+            .then(({ body }) => {
+                console.log(body)
+                expect(body.msg).toBe("Not found");
             });
     });
-});
+})
 
 describe("GET /api/reviews/:review_id", () => {
     test("200: Responds with an object with the corresponding review_id", () => {
         return request(app)
-            .get("/api/reviews?review_id=1")
+            .get("/api/reviews/1")
             .expect(200)
             .then(({ body }) => {
                 console.log(body);
                 const { review } = body;
-                review.forEach((review) => {
+                (review) => {
                     expect.objectContaining({
                         review_id: 1,
                         title: expect.any(String),
@@ -58,15 +62,23 @@ describe("GET /api/reviews/:review_id", () => {
                         category: expect.any(String),
                         owner: expect.any(String),
                     });
-                });
+                };
             });
     });
     test("400: responds with a bad request for an invalid category ID", () => {
         return request(app)
-            .get("/api/reviews?review_id=not-a-num")
+            .get("/api/reviews/not-a-num")
             .expect(400)
             .then(({ body }) => {
                 expect(body.msg).toBe("Invalid ID");
+            });
+    });
+    test("404: GET response for a valid but non existant category ID", () => {
+        return request(app)
+            .get("/api/reviews/1000")
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Not found");
             });
     });
 });
