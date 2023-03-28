@@ -6,6 +6,6 @@ exports.getCategories = (req, res, next) => {
             res.status(200).send({ categories: categoryArray });
         })
         .catch((err) => {
-            res.status(404).send({ msg: "Not found" });
+            next(err);
         });
 };

@@ -29,12 +29,55 @@ describe("GET /api/categories", () => {
                 });
             });
     });
-    test('404: Returns an error message Not Found when an endpoint is not specified', () => {
+});
+
+describe("GET /api with wrong endpoint", () => {
+    test("404: Returns an error message Not Found when an endpoint is not specified", () => {
         return request(app)
-        .get('/api/categories/incorrectendpoint')
-        .expect(404)
-        .then(({body: {msg}}) => {
-            expect(msg).toBe('Not found')
-        })
-    })
+            .get("/api/categories/incorrectendpoint")
+            .expect(404)
+            .then(({ body }) => {
+                console.log(body)
+                expect(body.msg).toBe("Not found");
+            });
+    });
+})
+
+describe("GET /api/reviews/:review_id", () => {
+    test("200: Responds with an object with the corresponding review_id", () => {
+        return request(app)
+            .get("/api/reviews/1")
+            .expect(200)
+            .then(({ body }) => {
+                const { review } = body;
+                (review) => {
+                    expect.objectContaining({
+                        review_id: 1,
+                        title: expect.any(String),
+                        review_body: expect.any(String),
+                        desginer: expect.any(String),
+                        review_img_url: expect.any(String),
+                        votes: expect.any(Number),
+                        category: expect.any(String),
+                        owner: expect.any(String),
+                    });
+                };
+            });
+    });
+    test("400: responds with a bad request for an invalid category ID", () => {
+        return request(app)
+            .get("/api/reviews/not-a-num")
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid ID");
+            });
+    });
+    test("404: GET response for a valid but non existant category ID", () => {
+        return request(app)
+            .get("/api/reviews/1000")
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Not found");
+            });
+    });
 });
