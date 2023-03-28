@@ -95,7 +95,6 @@ describe("GET /api/reviews", () => {
             .then(({ body }) => {
                 const { reviews } = body;
                 reviews.forEach((review) => {
-                    //console.log(review);
                     expect(review).toMatchObject({
                         review_id: expect.any(Number),
                         title: expect.any(String),
