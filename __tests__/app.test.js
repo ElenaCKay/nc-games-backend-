@@ -82,11 +82,6 @@ describe("GET /api/reviews/:review_id", () => {
     });
 });
 
-//Needs comment count which coutns all the comments with the review ID
-// describe("Function findCommentCount", () => {
-
-// })
-
 describe("GET /api/reviews", () => {
     test("200: Responds with an array of review objects", () => {
         return request(app)
