@@ -114,7 +114,7 @@ describe("GET /api/reviews", () => {
     });
 });
 
-describe.only("GET /api/reviews/:review_id/comments", () => {
+describe("GET /api/reviews/:review_id/comments", () => {
     test("200: Responds with an array of comments", () => {
         return request(app)
             .get("/api/reviews/3/comments")
@@ -141,6 +141,15 @@ describe.only("GET /api/reviews/:review_id/comments", () => {
             .then(({ body }) => {
                 const { comments } = body;
                 expect(comments).toBeSortedBy("created_at", { descending: true });
+            });
+    });
+    test("200: Responds with an empty comment array when given an id with no comments", () => {
+        return request(app)
+            .get("/api/reviews/1/comments")
+            .expect(200)
+            .then(({ body }) => {
+                const { comments } = body;
+                expect(comments).toEqual([]);
             });
     });
     test("400: responds with a bad request for an invalid review ID", () => {

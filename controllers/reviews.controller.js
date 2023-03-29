@@ -24,9 +24,14 @@ exports.getReviews = (req, res, next) => {
 
 exports.getCommentsById = (req, res, next) => {
     const { review_id } = req.params;
-    console.log(review_id)
-    selectCommentsById(review_id)
-        .then((comments) => {
+
+    const commentPromises = [selectCommentsById(review_id)];
+    if (review_id) {
+        commentPromises.push(selectReview(review_id));
+    }
+
+    Promise.all(commentPromises)
+        .then(([comments]) => {
             res.status(200).send({ comments });
         })
         .catch((err) => {

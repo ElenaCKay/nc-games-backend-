@@ -29,15 +29,14 @@ exports.fetchReviews = () => {
 };
 
 exports.selectCommentsById = (review_id) => {
-    return db.query( 
-        `SELECT * FROM comments 
+    return db
+        .query(
+            `SELECT * FROM comments 
         WHERE review_id = $1
-        ORDER BY created_at DESC;`, [review_id]
-    )
-    .then((result) => {
-        if (result.rowCount === 0) {
-            return Promise.reject({ status: 404, msg: "Not found" });
-        }
-        return result.rows
-    })
-}
+        ORDER BY created_at DESC;`,
+            [review_id]
+        )
+        .then((result) => {
+            return result.rows;
+        });
+};
