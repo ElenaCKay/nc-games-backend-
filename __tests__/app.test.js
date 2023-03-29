@@ -168,7 +168,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
     });
 });
 
-describe.only("POST /api/reviews/:review_id/comments", () => {
+describe("POST /api/reviews/:review_id/comments", () => {
     test("201: POST adds a comment to the database for a specific review_id and responds with created comment", () => {
         const newComment = {
             username: "philippaclaire9",
