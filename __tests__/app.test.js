@@ -63,7 +63,7 @@ describe("GET /api/reviews/:review_id", () => {
                 };
             });
     });
-    test("400: responds with a bad request for an invalid category ID", () => {
+    test("400: responds with a bad request for an invalid review ID", () => {
         return request(app)
             .get("/api/reviews/not-a-num")
             .expect(400)
@@ -71,7 +71,7 @@ describe("GET /api/reviews/:review_id", () => {
                 expect(body.msg).toBe("Invalid ID");
             });
     });
-    test("404: GET response for a valid but non existant category ID", () => {
+    test("404: GET response for a valid but non existant review ID", () => {
         return request(app)
             .get("/api/reviews/1000")
             .expect(404)
@@ -110,6 +110,62 @@ describe("GET /api/reviews", () => {
             .then(({ body }) => {
                 const { reviews } = body;
                 expect(reviews).toBeSortedBy("created_at", { descending: true });
+            });
+    });
+});
+
+describe("GET /api/reviews/:review_id/comments", () => {
+    test("200: Responds with an array of comments", () => {
+        return request(app)
+            .get("/api/reviews/3/comments")
+            .expect(200)
+            .then(({ body }) => {
+                const { comments } = body;
+                expect(comments).toHaveLength(3);
+                comments.forEach((comment) => {
+                    expect(comment).toMatchObject({
+                        comment_id: expect.any(Number),
+                        votes: expect.any(Number),
+                        created_at: expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        review_id: expect.any(Number),
+                    });
+                });
+            });
+    });
+    test("200: Responds with array of comments sorted by most recent first", () => {
+        return request(app)
+            .get("/api/reviews/3/comments")
+            .expect(200)
+            .then(({ body }) => {
+                const { comments } = body;
+                expect(comments).toBeSortedBy("created_at", { descending: true });
+            });
+    });
+    test("200: Responds with an empty comment array when given an id with no comments", () => {
+        return request(app)
+            .get("/api/reviews/1/comments")
+            .expect(200)
+            .then(({ body }) => {
+                const { comments } = body;
+                expect(comments).toEqual([]);
+            });
+    });
+    test("400: responds with a bad request for an invalid review ID", () => {
+        return request(app)
+            .get("/api/reviews/not-a-num/comments")
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid ID");
+            });
+    });
+    test("404: GET response for a valid but non existant review ID", () => {
+        return request(app)
+            .get("/api/reviews/1000/comments")
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Not found");
             });
     });
 });
