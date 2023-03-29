@@ -122,15 +122,13 @@ describe("GET /api/reviews/:review_id/comments", () => {
             .then(({ body }) => {
                 const { comments } = body;
                 expect(comments).toHaveLength(3);
-                comments.forEach((comment) => {
-                    expect(comment).toMatchObject({
-                        comment_id: expect.any(Number),
-                        votes: expect.any(Number),
-                        created_at: expect.any(String),
-                        author: expect.any(String),
-                        body: expect.any(String),
-                        review_id: expect.any(Number),
-                    });
+                expect(comments[0]).toEqual({
+                    comment_id: 6,
+                    body: "Not sure about dogs, but my cat likes to get involved with board games, the boxes are their particular favourite",
+                    review_id: 3,
+                    author: "philippaclaire9",
+                    votes: 10,
+                    created_at: "2021-03-27T19:49:48.110Z",
                 });
             });
     });
