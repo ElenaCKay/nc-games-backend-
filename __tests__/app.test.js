@@ -122,7 +122,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
             .then(({ body }) => {
                 const { comments } = body;
                 expect(comments).toHaveLength(3);
-                expect(comments[0]).toEqual({
+                expect(comments[0]).toMatchObject({
                     comment_id: 6,
                     body: "Not sure about dogs, but my cat likes to get involved with board games, the boxes are their particular favourite",
                     review_id: 3,
@@ -164,6 +164,82 @@ describe("GET /api/reviews/:review_id/comments", () => {
             .expect(404)
             .then(({ body }) => {
                 expect(body.msg).toBe("Not found");
+            });
+    });
+});
+
+describe("POST /api/reviews/:review_id/comments", () => {
+    test("201: POST adds a comment to the database for a specific review_id and responds with created comment", () => {
+        const newComment = {
+            username: "philippaclaire9",
+            body: "This game was more fun then the skirmish at Weathertop",
+        };
+
+        return request(app)
+            .post("/api/reviews/1/comments")
+            .send(newComment)
+            .expect(201)
+            .then(({ body }) => {
+                const { comment } = body;
+                expect(comment).toMatchObject({
+                    comment_id: expect.any(Number),
+                    author: "philippaclaire9",
+                    body: "This game was more fun then the skirmish at Weathertop",
+                    votes: 0,
+                    review_id: 1,
+                    created_at: expect.any(String),
+                });
+            });
+    });
+    test("400: POST responds with error message when missing information", () => {
+        const newComment = {
+            body: "This games is so rubbish I can not even give you my own username",
+        };
+        return request(app)
+            .post("/api/reviews/1/comments")
+            .send(newComment)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Error: Missing required information");
+            });
+    });
+    test("404: POST responds with error message when given a valid id, which doesnt exist", () => {
+        const newComment = {
+            username: "philippaclaire9",
+            body: "This game was more fun then the skirmish at Weathertop",
+        };
+        return request(app)
+            .post("/api/reviews/50/comments")
+            .send(newComment)
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid information");
+            });
+    });
+    test("404: POST responds with error message when an invalid username", () => {
+        const newComment = {
+            username: "Aragorn",
+            body: "This game was more fun then the skirmish at Weathertop",
+        };
+        return request(app)
+            .post("/api/reviews/1/comments")
+            .send(newComment)
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid information");
+            });
+    });
+    test("400: POST responds with error message when given invalid id", () => {
+        const newComment = {
+            username: "philippaclaire9",
+            body: "This game was more fun then the skirmish at Weathertop",
+        };
+        return request(app)
+            .post("/api/reviews/not-a-num/comments")
+            .send(newComment)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid ID");
             });
     });
 });
