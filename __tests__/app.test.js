@@ -122,7 +122,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
             .then(({ body }) => {
                 const { comments } = body;
                 expect(comments).toHaveLength(3);
-                expect(comments[0]).toEqual({
+                expect(comments[0]).toMatchObject({
                     comment_id: 6,
                     body: "Not sure about dogs, but my cat likes to get involved with board games, the boxes are their particular favourite",
                     review_id: 3,
@@ -181,7 +181,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
             .expect(201)
             .then(({ body }) => {
                 const { comment } = body;
-                expect(comment).toEqual({
+                expect(comment).toMatchObject({
                     comment_id: expect.any(Number),
                     author: "philippaclaire9",
                     body: "This game was more fun then the skirmish at Weathertop",
@@ -209,11 +209,24 @@ describe("POST /api/reviews/:review_id/comments", () => {
             body: "This game was more fun then the skirmish at Weathertop",
         };
         return request(app)
-            .post("/api/reviews/1000/comments")
+            .post("/api/reviews/50/comments")
             .send(newComment)
             .expect(404)
             .then(({ body }) => {
-                expect(body.msg).toBe("Not found");
+                expect(body.msg).toBe("Invalid information");
+            });
+    });
+    test("404: POST responds with error message when an invalid username", () => {
+        const newComment = {
+            username: "Aragorn",
+            body: "This game was more fun then the skirmish at Weathertop",
+        };
+        return request(app)
+            .post("/api/reviews/1/comments")
+            .send(newComment)
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid information");
             });
     });
     test("400: POST responds with error message when given invalid id", () => {

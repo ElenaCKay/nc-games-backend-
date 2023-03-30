@@ -44,7 +44,7 @@ exports.selectCommentsById = (review_id) => {
 exports.insertComment = (newComment, review_id) => {
     const { username, body } = newComment;
     const votes = 0;
-    const commentArray = [username, body, votes, 1]
+    const commentArray = [username, body, votes, review_id]
     return db
         .query(
             `
@@ -55,6 +55,7 @@ exports.insertComment = (newComment, review_id) => {
             commentArray
         )
         .then((result) => {
+            console.log(result)
             return result.rows[0];
         })
 };

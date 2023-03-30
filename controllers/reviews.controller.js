@@ -42,14 +42,12 @@ exports.getCommentsById = (req, res, next) => {
 exports.postComment = (req, res, next) => {
     const { review_id } = req.params;
     const newComment = req.body;
-    if (!newComment.username || !newComment.body){
-           res.status(400).send({msg: "Error: Missing required information" });
-           return
+    if (!newComment.username || !newComment.body) {
+        res.status(400).send({ msg: "Error: Missing required information" });
+        return;
     }
-    const commentPromises = [insertComment(newComment, review_id)];
-    if (review_id) {
-        commentPromises.push(selectReview(review_id));
-    }
+    const commentPromises = [insertComment(newComment, review_id), selectReview(review_id)];
+
     Promise.all(commentPromises)
         .then(([comment]) => {
             res.status(201).send({ comment });
@@ -57,5 +55,4 @@ exports.postComment = (req, res, next) => {
         .catch((err) => {
             next(err);
         });
-
 };
