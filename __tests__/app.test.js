@@ -326,3 +326,25 @@ describe("PATCH /api/reviews/:review_id", () => {
             });
     });
 });
+
+describe("DELETE /api/comments/:comment_id", () => {
+    test("204: DELETE responds with no content", () => {
+        return request(app).delete("/api/comments/1").expect(204);
+    });
+    test("400: DELETE Responds with error when give an incorrect comment_id", () => {
+        return request(app)
+            .delete("/api/comments/not-a-num")
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid ID");
+            });
+    });
+    test("404: DELETE responds with error message when given a valid id, which doesnt exist", () => {
+        return request(app)
+            .delete("/api/comments/100")
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("ID not found");
+            });
+    });
+});

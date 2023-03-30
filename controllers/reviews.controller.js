@@ -4,6 +4,7 @@ const {
     selectCommentsById,
     insertComment,
     updateReviewVotes,
+    removeCommentById,
 } = require("../models/reviews.model");
 
 exports.getReviewById = (req, res, next) => {
@@ -79,4 +80,21 @@ exports.patchReviewVotes = (req, res, next) => {
         .catch((err) => {
             next(err);
         });
+};
+
+exports.deleteCommentById = (req, res, next) => {
+    const { comment_id } = req.params;
+
+    if (typeof parseInt(comment_id) === "number") {
+        removeCommentById(comment_id)
+            .then((deletedComment) => {
+                if (deletedComment > 0) {res.sendStatus(204)}
+                else {
+                    res.status(404).send({ msg: "ID not found" })
+                };
+            })
+            .catch((err) => {
+                next(err);
+            });
+    }
 };
