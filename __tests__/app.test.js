@@ -244,7 +244,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
     });
 });
 
-describe.only("PATCH /api/reviews/:review_id", () => {
+describe("PATCH /api/reviews/:review_id", () => {
     test("200: PATCH responds with updated review (adding votes)", () => {
         return request(app)
             .patch("/api/reviews/1")
