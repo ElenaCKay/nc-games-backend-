@@ -1,4 +1,10 @@
-const { selectReview, fetchReviews, selectCommentsById, insertComment } = require("../models/reviews.model");
+const {
+    selectReview,
+    fetchReviews,
+    selectCommentsById,
+    insertComment,
+    updateReviewVotes,
+} = require("../models/reviews.model");
 
 exports.getReviewById = (req, res, next) => {
     const { review_id } = req.params;
@@ -51,6 +57,24 @@ exports.postComment = (req, res, next) => {
     Promise.all(commentPromises)
         .then(([comment]) => {
             res.status(201).send({ comment });
+        })
+        .catch((err) => {
+            next(err);
+        });
+};
+
+exports.patchReviewVotes = (req, res, next) => {
+    const { review_id } = req.params;
+    const { inc_votes } = req.body;
+
+    if (typeof inc_votes !== "number") {
+        res.status(400).send({ msg: "Error: votes is not a number" });
+    }
+    const votesPromises = [updateReviewVotes(inc_votes, review_id), selectReview(review_id)];
+
+    Promise.all(votesPromises)
+        .then(([review]) => {
+            res.status(200).send({ review });
         })
         .catch((err) => {
             next(err);
