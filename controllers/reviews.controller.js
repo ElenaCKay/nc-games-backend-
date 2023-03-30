@@ -67,8 +67,8 @@ exports.patchReviewVotes = (req, res, next) => {
     const { review_id } = req.params;
     const { inc_votes } = req.body;
 
-    if (typeof inc_votes !== "number") {
-        res.status(400).send({ msg: "Error: votes is not a number" });
+    if (typeof inc_votes !== "number" || !inc_votes) {
+        res.status(400).send({ msg: "Error: incorrect object" });
     }
     const votesPromises = [updateReviewVotes(inc_votes, review_id), selectReview(review_id)];
 

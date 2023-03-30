@@ -304,7 +304,16 @@ describe("PATCH /api/reviews/:review_id", () => {
             .send({ inc_votes: "hi" })
             .expect(400)
             .then(({ body }) => {
-                expect(body.msg).toBe("Error: votes is not a number");
+                expect(body.msg).toBe("Error: incorrect object");
+            });
+    });
+    test("400: PATCH responds with error message when given an invaild object", () => {
+        return request(app)
+            .patch("/api/reviews/1")
+            .send({ votes: 1 })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Error: incorrect object");
             });
     });
     test("400: PATCH responds with error message when given invalid id", () => {
