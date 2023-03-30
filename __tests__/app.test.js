@@ -243,3 +243,86 @@ describe("POST /api/reviews/:review_id/comments", () => {
             });
     });
 });
+
+describe("PATCH /api/reviews/:review_id", () => {
+    test("200: PATCH responds with updated review (adding votes)", () => {
+        return request(app)
+            .patch("/api/reviews/1")
+            .send({ inc_votes: 1 })
+            .expect(200)
+            .then(({ body }) => {
+                const { review } = body;
+                (review) => {
+                    expect(review).toMatchObject({
+                        review_id: 1,
+                        title: "Agricola",
+                        designer: "Uwe Rosenberg",
+                        owner: "mallionaire",
+                        review_img_url: "https://images.pexels.com/photos/974314/pexels-photo-974314.jpeg?w=700&h=700",
+                        review_body: "Farmyard fun!",
+                        category: "euro game",
+                        created_at: expect.any(String),
+                        votes: 2,
+                    });
+                };
+            });
+    });
+    test("200: PATCH responds with updated review (removing votes)", () => {
+        return request(app)
+            .patch("/api/reviews/1")
+            .send({ inc_votes: -100 })
+            .expect(200)
+            .then(({ body }) => {
+                const { review } = body;
+                (review) => {
+                    expect(review).toMatchObject({
+                        review_id: 1,
+                        title: "Agricola",
+                        designer: "Uwe Rosenberg",
+                        owner: "mallionaire",
+                        review_img_url: "https://images.pexels.com/photos/974314/pexels-photo-974314.jpeg?w=700&h=700",
+                        review_body: "Farmyard fun!",
+                        category: "euro game",
+                        created_at: expect.any(String),
+                        votes: -99,
+                    });
+                };
+            });
+    });
+    test("404: PATCH responds with error message when given a valid id, which doesnt exist", () => {
+        return request(app)
+            .patch("/api/reviews/50")
+            .send({ inc_votes: 1 })
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Not found");
+            });
+    });
+    test("400: PATCH responds with error message when given an invaild object", () => {
+        return request(app)
+            .patch("/api/reviews/1")
+            .send({ inc_votes: "hi" })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Error: incorrect object");
+            });
+    });
+    test("400: PATCH responds with error message when given an invaild object", () => {
+        return request(app)
+            .patch("/api/reviews/1")
+            .send({ votes: 1 })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Error: incorrect object");
+            });
+    });
+    test("400: PATCH responds with error message when given invalid id", () => {
+        return request(app)
+            .patch("/api/reviews/not-a-num")
+            .send({ inc_votes: 1 })
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid ID");
+            });
+    });
+});
