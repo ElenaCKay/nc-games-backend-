@@ -42,7 +42,7 @@ describe("GET /api with wrong endpoint", () => {
     });
 });
 
-describe("GET /api/reviews/:review_id", () => {
+describe.only("GET /api/reviews/:review_id", () => {
     test("200: Responds with an object with the corresponding review_id", () => {
         return request(app)
             .get("/api/reviews/1")
@@ -59,6 +59,7 @@ describe("GET /api/reviews/:review_id", () => {
                         votes: expect.any(Number),
                         category: expect.any(String),
                         owner: expect.any(String),
+                        comment_count: expect(0)
                     });
                 };
             });
