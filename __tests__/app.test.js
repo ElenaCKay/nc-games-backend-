@@ -59,7 +59,27 @@ describe("GET /api/reviews/:review_id", () => {
                         votes: expect.any(Number),
                         category: expect.any(String),
                         owner: expect.any(String),
-                        comment_count: expect(0)
+                    });
+                };
+            });
+    });
+    test("200: Responds with an object with the corresponding review_id and comment count", () => {
+        return request(app)
+            .get("/api/reviews/3")
+            .expect(200)
+            .then(({ body }) => {
+                const { review } = body;
+                (review) => {
+                    expect(review).toMatchObject({
+                        review_id: 3,
+                        title: expect.any(String),
+                        review_body: expect.any(String),
+                        desginer: expect.any(String),
+                        review_img_url: expect.any(String),
+                        votes: expect.any(Number),
+                        category: expect.any(String),
+                        owner: expect.any(String),
+                        comment_count: expect(3),
                     });
                 };
             });
