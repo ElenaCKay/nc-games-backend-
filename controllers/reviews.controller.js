@@ -30,7 +30,7 @@ exports.getReviews = async (req, res, next) => {
             const slugs = categories.map((category) => category.slug);
 
             if (!slugs.includes(category)) {
-                res.status(400).send({ msg: "Invalid Category" });
+                res.status(404).send({ msg: "Invalid Category" });
                 return;
             }
         } catch (error) {

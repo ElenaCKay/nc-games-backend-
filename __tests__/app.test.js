@@ -191,10 +191,10 @@ describe("GET /api/reviews", () => {
                 expect(body.msg).toBe("Invalid Sort Query");
             });
     });
-    test("404: GET responds with error for an invaild category", () => {
+    test("404: GET responds with error for a vaild category which doesnt exist", () => {
         return request(app)
             .get("/api/reviews?category=banana")
-            .expect(400)
+            .expect(404)
             .then(({ body }) => {
                 expect(body.msg).toBe("Invalid Category");
             });
