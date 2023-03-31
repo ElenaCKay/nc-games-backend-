@@ -112,6 +112,91 @@ describe("GET /api/reviews", () => {
                 expect(reviews).toBeSortedBy("created_at", { descending: true });
             });
     });
+    test("200: accepts a category query", () => {
+        return request(app)
+            .get("/api/reviews?category=dexterity")
+            .expect(200)
+            .then(({ body }) => {
+                const { reviews } = body;
+                expect(reviews).toHaveLength(1);
+                reviews.forEach((review) => {
+                    expect(review).toMatchObject({
+                        review_id: expect.any(Number),
+                        title: expect.any(String),
+                        designer: expect.any(String),
+                        review_img_url: expect.any(String),
+                        votes: expect.any(Number),
+                        category: "dexterity",
+                        owner: expect.any(String),
+                        comment_count: expect.any(Number),
+                    });
+                });
+            });
+    });
+    test("200: Responds with array of objects sorted by a sort by query", () => {
+        return request(app)
+            .get("/api/reviews?sort_by=votes")
+            .expect(200)
+            .then(({ body }) => {
+                const { reviews } = body;
+                expect(reviews).toBeSortedBy("votes", { descending: true });
+            });
+    });
+    test("200: Responds with array of objects ordered by ascending", () => {
+        return request(app)
+            .get("/api/reviews?order=ASC")
+            .expect(200)
+            .then(({ body }) => {
+                const { reviews } = body;
+                expect(reviews).toBeSortedBy("created_at", { descending: false });
+            });
+    });
+    test("200: accepts a category, sort_by and order query", () => {
+        return request(app)
+            .get("/api/reviews?category=social deduction&sort_by=votes&order=ASC")
+            .expect(200)
+            .then(({ body }) => {
+                const { reviews } = body;
+                expect(reviews).toBeSortedBy("votes", { descending: false });
+                expect(reviews).toHaveLength(11);
+                reviews.forEach((review) => {
+                    expect(review).toMatchObject({
+                        review_id: expect.any(Number),
+                        title: expect.any(String),
+                        designer: expect.any(String),
+                        review_img_url: expect.any(String),
+                        votes: expect.any(Number),
+                        category: "social deduction",
+                        owner: expect.any(String),
+                        comment_count: expect.any(Number),
+                    });
+                });
+            });
+    });
+    test("404: GET responds with error for an invaild sort_by", () => {
+        return request(app)
+            .get("/api/reviews?sort_by=banana")
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid Sort Query");
+            });
+    });
+    test("404: GET responds with error for an invaild category", () => {
+        return request(app)
+            .get("/api/reviews?category=banana")
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid Category");
+            });
+    });
+    test("404: GET responds with error for an invaild order", () => {
+        return request(app)
+            .get("/api/reviews?order=banana")
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid Order");
+            });
+    });
 });
 
 describe("GET /api/reviews/:review_id/comments", () => {

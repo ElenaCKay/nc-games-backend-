@@ -10,22 +10,28 @@ exports.selectReview = (reviewId) => {
     });
 };
 
-exports.fetchReviews = () => {
-    return db
-        .query(
-            `SELECT reviews.title, reviews.review_id, reviews.designer, reviews.review_img_url, reviews.votes, reviews.category, 
-            reviews.owner, reviews.created_at, 
-            CAST(COUNT(comments.review_id) AS INT) as comment_count
-            FROM reviews
-            LEFT JOIN comments
-            ON reviews.review_id = comments.review_id
-            GROUP BY title, reviews.review_id, reviews.designer, reviews.review_img_url, reviews.votes, reviews.category, 
-            reviews.owner, reviews.created_at       
-            ORDER BY reviews.created_at DESC;`
-        )
-        .then((result) => {
-            return result.rows;
-        });
+exports.fetchReviews = (category, sort_by = "created_at", order = "DESC") => {
+    if (sort_by && sort_by !== "created_at" && sort_by !== "votes") {
+        return Promise.reject({ status: 404, msg: "Invalid Sort Query" });
+    }
+    if (category && category !== "euro game" && category !== "dexterity" && category !== "social deduction") {
+        return Promise.reject({ status: 404, msg: "Invalid Category" });
+    }
+    if (order && order !== "ASC" && order !== "DESC") {
+        return Promise.reject({ status: 404, msg: "Invalid Order" });
+    }
+
+    whereCategory = category ? `WHERE category = '${category}'` : "";
+
+    const queryString = `
+    SELECT *, (SELECT CAST(COUNT(*) AS INT) FROM comments WHERE comments.review_id = reviews.review_id) AS comment_count
+    FROM reviews 
+    ${whereCategory}     
+    ORDER BY ${sort_by} ${order};`;
+
+    return db.query(queryString).then((result) => {
+        return result.rows;
+    });
 };
 
 exports.selectCommentsById = (review_id) => {
@@ -89,3 +95,8 @@ exports.removeCommentById = (comment_id) => {
             return deletedRows.rowCount;
         });
 };
+
+// `SELECT *, (SELECT COUNT * FROM comments WHERE comments.review_id = reviews.review_id) AS comment_count
+//  FROM reviews
+//  ${ORDER_BY_CLAUSE}
+//  ${WHERE_CLAUSE};`
