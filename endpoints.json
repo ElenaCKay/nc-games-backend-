@@ -1,34 +1,103 @@
 {
-  "GET /api": {
-    "description": "serves up a json representation of all the available endpoints of the api"
-  },
-  "GET /api/categories": {
-    "description": "serves an array of all categories",
-    "queries": [],
-    "exampleResponse": {
-      "categories": [
-        {
-          "description": "Players attempt to uncover each other's hidden role",
-          "slug": "Social deduction"
+    "GET /api": {
+        "description": "serves up a json representation of all the available endpoints of the api"
+    },
+    "GET /api/categories": {
+        "description": "serves an array of all categories",
+        "queries": [],
+        "exampleResponse": {
+            "categories": [
+                {
+                    "description": "Players attempt to uncover each other's hidden role",
+                    "slug": "Social deduction"
+                }
+            ]
         }
-      ]
-    }
-  },
-  "GET /api/reviews": {
-    "description": "serves an array of all reviews",
-    "queries": ["category", "sort_by", "order"],
-    "exampleResponse": {
-      "reviews": [
-        {
-          "title": "One Night Ultimate Werewolf",
-          "designer": "Akihisa Okui",
-          "owner": "happyamy2016",
-          "review_img_url": "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-          "category": "hidden-roles",
-          "created_at": 1610964101251,
-          "votes": 5
+    },
+    "GET /api/reviews": {
+        "description": "serves an array of all reviews",
+        "queries": ["category", "sort_by", "order"],
+        "exampleResponse": {
+            "reviews": [
+                {
+                    "title": "One Night Ultimate Werewolf",
+                    "designer": "Akihisa Okui",
+                    "owner": "happyamy2016",
+                    "review_img_url": "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+                    "category": "hidden-roles",
+                    "created_at": 1610964101251,
+                    "votes": 5,
+                    "comment_count": 0
+                }
+            ]
         }
-      ]
+    },
+    "GET /api/reviews/:review_id": {
+        "description": "serves a review object which has the corresponding review id",
+        "queries": [],
+        "exampleResponse": {
+            "title": "One Night Ultimate Werewolf",
+            "designer": "Akihisa Okui",
+            "owner": "happyamy2016",
+            "review_img_url": "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+            "category": "hidden-roles",
+            "created_at": 1610964101251,
+            "votes": 5,
+            "comment_count": 0
+        }
+    },
+    "GET /api/reviews/:review_id/comments": {
+        "description": "serves an array of all comments with corresponding review id",
+        "queries": [],
+        "exampleResponse": [
+            {
+                "comment_id": 6,
+                "body": "Not sure about dogs, but my cat likes to get involved with board games, the boxes are their particular favourite",
+                "review_id": 3,
+                "author": "philippaclaire9",
+                "votes": 10,
+                "created_at": "2021-03-27T19:49:48.110Z"
+            }
+        ]
+    },
+    "POST /api/reviews/:review_id/comments": {
+        "description": "Adds a comment object to with the corresponding review id",
+        "queries": [],
+        "exampleResponse": {
+            "comment_id": 1,
+            "author": "philippaclaire9",
+            "body": "This game was more fun then the skirmish at Weathertop",
+            "votes": 0,
+            "review_id": 1,
+            "created_at": "2021-03-27T19:49:48.110Z"
+        }
+    },
+    "PATCH /api/reviews/:review_id": {
+        "description": "Updates the votes for a specific review",
+        "queries": [],
+        "exampleResponse": {
+            "review_id": 1,
+            "title": "Agricola",
+            "designer": "Uwe Rosenberg",
+            "owner": "mallionaire",
+            "review_img_url": "https://images.pexels.com/photos/974314/pexels-photo-974314.jpeg?w=700&h=700",
+            "review_body": "Farmyard fun!",
+            "category": "euro game",
+            "created_at": "2021-03-27T19:49:48.110Z",
+            "votes": 2
+        }
+    },
+    "DELETE /api/comments/:comment_id": {
+        "description": "Deletes a specified comment",
+        "queries": []
+    },
+    "GET /api/users": {
+        "description": "serves an array of all users",
+        "queries": [],
+        "exampleResponse": {
+            "username": "dav3rid",
+            "name": "dave",
+            "avatar_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
+        }
     }
-  }
 }
