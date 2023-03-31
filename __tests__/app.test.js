@@ -42,7 +42,7 @@ describe("GET /api with wrong endpoint", () => {
     });
 });
 
-describe.only("GET /api/reviews/:review_id", () => {
+describe("GET /api/reviews/:review_id", () => {
     test("200: Responds with an object with the corresponding review_id", () => {
         return request(app)
             .get("/api/reviews/1")
