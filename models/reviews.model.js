@@ -12,24 +12,19 @@ exports.selectReview = (reviewId) => {
 
 exports.fetchReviews = (category, sort_by = "created_at", order = "DESC") => {
     if (sort_by && sort_by !== "created_at" && sort_by !== "votes") {
-        return Promise.reject({ status: 404, msg: "Invalid Sort Query" });
-    }
-    if (category && category !== "euro game" && category !== "dexterity" && category !== "social deduction") {
-        return Promise.reject({ status: 404, msg: "Invalid Category" });
+        return Promise.reject({ status: 400, msg: "Invalid Sort Query" });
     }
     if (order && order !== "ASC" && order !== "DESC") {
-        return Promise.reject({ status: 404, msg: "Invalid Order" });
+        return Promise.reject({ status: 400, msg: "Invalid Order" });
     }
-
-    whereCategory = category ? `WHERE category = '${category}'` : "";
 
     const queryString = `
     SELECT *, (SELECT CAST(COUNT(*) AS INT) FROM comments WHERE comments.review_id = reviews.review_id) AS comment_count
     FROM reviews 
-    ${whereCategory}     
+    WHERE category = $1 OR $1 IS NULL     
     ORDER BY ${sort_by} ${order};`;
 
-    return db.query(queryString).then((result) => {
+    return db.query(queryString, [category]).then((result) => {
         return result.rows;
     });
 };

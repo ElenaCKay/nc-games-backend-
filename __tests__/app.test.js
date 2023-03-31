@@ -173,10 +173,20 @@ describe("GET /api/reviews", () => {
                 });
             });
     });
-    test("404: GET responds with error for an invaild sort_by", () => {
+    test("200: accepts a valid category which has no reviews", () => {
+        return request(app)
+            .get("/api/reviews?category=children's games")
+            .expect(200)
+            .then(({ body }) => {
+                const { reviews } = body;
+                expect(reviews).toHaveLength(0);
+                expect(reviews).toEqual([]);
+            });
+    });
+    test("400: GET responds with error for an invaild sort_by", () => {
         return request(app)
             .get("/api/reviews?sort_by=banana")
-            .expect(404)
+            .expect(400)
             .then(({ body }) => {
                 expect(body.msg).toBe("Invalid Sort Query");
             });
@@ -184,15 +194,15 @@ describe("GET /api/reviews", () => {
     test("404: GET responds with error for an invaild category", () => {
         return request(app)
             .get("/api/reviews?category=banana")
-            .expect(404)
+            .expect(400)
             .then(({ body }) => {
                 expect(body.msg).toBe("Invalid Category");
             });
     });
-    test("404: GET responds with error for an invaild order", () => {
+    test("400: GET responds with error for an invaild order", () => {
         return request(app)
             .get("/api/reviews?order=banana")
-            .expect(404)
+            .expect(400)
             .then(({ body }) => {
                 expect(body.msg).toBe("Invalid Order");
             });
