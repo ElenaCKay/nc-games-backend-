@@ -7,6 +7,8 @@ const {
     removeCommentById,
 } = require("../models/reviews.model");
 
+const { fetchCategories } = require("../models/categories.model");
+
 exports.getReviewById = (req, res, next) => {
     const { review_id } = req.params;
 
@@ -19,14 +21,30 @@ exports.getReviewById = (req, res, next) => {
         });
 };
 
-exports.getReviews = (req, res, next) => {
-    fetchReviews()
-        .then((reviews) => {
-            res.status(200).send({ reviews });
-        })
-        .catch((err) => {
-            next(err);
-        });
+exports.getReviews = async (req, res, next) => {
+    const { category, sort_by, order } = req.query;
+
+    if (category) {
+        try {
+            const categories = await fetchCategories();
+            const slugs = categories.map((category) => category.slug);
+
+            if (!slugs.includes(category)) {
+                res.status(404).send({ msg: "Invalid Category" });
+                return;
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    try {
+        const reviews = await fetchReviews(category, sort_by, order);
+
+        res.status(200).send({ reviews });
+    } catch (error) {
+        next(error);
+    }
 };
 
 exports.getCommentsById = (req, res, next) => {
@@ -88,10 +106,11 @@ exports.deleteCommentById = (req, res, next) => {
     if (typeof parseInt(comment_id) === "number") {
         removeCommentById(comment_id)
             .then((deletedComment) => {
-                if (deletedComment > 0) {res.sendStatus(204)}
-                else {
-                    res.status(404).send({ msg: "ID not found" })
-                };
+                if (deletedComment > 0) {
+                    res.sendStatus(204);
+                } else {
+                    res.status(404).send({ msg: "ID not found" });
+                }
             })
             .catch((err) => {
                 next(err);
