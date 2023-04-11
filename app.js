@@ -1,7 +1,14 @@
 const express = require("express");
 const app = express();
 const { getCategories, errNotFound, serverRunning } = require("./controllers/categories.controller");
-const { getReviewById, getReviews, getCommentsById, postComment, patchReviewVotes, deleteCommentById } = require("./controllers/reviews.controller");
+const {
+    getReviewById,
+    getReviews,
+    getCommentsById,
+    postComment,
+    patchReviewVotes,
+    deleteCommentById,
+} = require("./controllers/reviews.controller");
 const { getUsers } = require("./controllers/users.controller");
 const { handlePSQL400s, handleCustomErrors, handle500Statuses, handleUsernameErrors } = require("./error_handling");
 
@@ -19,11 +26,11 @@ app.get("/api/reviews/:review_id/comments", getCommentsById);
 
 app.post("/api/reviews/:review_id/comments", postComment);
 
-app.patch("/api/reviews/:review_id", patchReviewVotes)
+app.patch("/api/reviews/:review_id", patchReviewVotes);
 
-app.delete("/api/comments/:comment_id", deleteCommentById)
+app.delete("/api/comments/:comment_id", deleteCommentById);
 
-app.get("/api/users", getUsers)
+app.get("/api/users", getUsers);
 
 app.all("/*", errNotFound);
 

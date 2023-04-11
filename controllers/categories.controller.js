@@ -1,4 +1,5 @@
 const { fetchCategories } = require("../models/categories.model");
+const fs = require("fs");
 
 exports.getCategories = (req, res, next) => {
     fetchCategories()
@@ -15,5 +16,7 @@ exports.errNotFound = (req, res) => {
 };
 
 exports.serverRunning = (req, res) => {
-    res.status(200).send({ msg: "Server is up and running" });
-}
+    const fileContents = fs.readFileSync(`${__dirname}/../endpoints.json`, "utf-8");
+
+    res.status(200).json({ fileContents });
+};
