@@ -98,8 +98,3 @@ exports.removeCommentById = (comment_id) => {
             return deletedRows.rowCount;
         });
 };
-
-// `SELECT *, (SELECT COUNT * FROM comments WHERE comments.review_id = reviews.review_id) AS comment_count
-//  FROM reviews
-//  ${ORDER_BY_CLAUSE}
-//  ${WHERE_CLAUSE};`
