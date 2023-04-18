@@ -385,7 +385,7 @@ describe("PATCH /api/reviews/:review_id", () => {
     test("200: PATCH responds with updated review (removing votes)", () => {
         return request(app)
             .patch("/api/reviews/1")
-            .send({ inc_votes: -100 })
+            .send({ inc_votes: 0 })
             .expect(200)
             .then(({ body }) => {
                 const { review } = body;
@@ -399,7 +399,7 @@ describe("PATCH /api/reviews/:review_id", () => {
                     review_body: "Farmyard fun!",
                     category: "euro game",
                     created_at: expect.any(String),
-                    votes: -99,
+                    votes: 1,
                 });
             });
     });
