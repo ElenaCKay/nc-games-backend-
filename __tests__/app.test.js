@@ -368,19 +368,18 @@ describe("PATCH /api/reviews/:review_id", () => {
             .expect(200)
             .then(({ body }) => {
                 const { review } = body;
-                (review) => {
-                    expect(review).toMatchObject({
-                        review_id: 1,
-                        title: "Agricola",
-                        designer: "Uwe Rosenberg",
-                        owner: "mallionaire",
-                        review_img_url: "https://images.pexels.com/photos/974314/pexels-photo-974314.jpeg?w=700&h=700",
-                        review_body: "Farmyard fun!",
-                        category: "euro game",
-                        created_at: expect.any(String),
-                        votes: 2,
-                    });
-                };
+
+                expect(review).toMatchObject({
+                    review_id: 1,
+                    title: "Agricola",
+                    designer: "Uwe Rosenberg",
+                    owner: "mallionaire",
+                    review_img_url: "https://images.pexels.com/photos/974314/pexels-photo-974314.jpeg?w=700&h=700",
+                    review_body: "Farmyard fun!",
+                    category: "euro game",
+                    created_at: expect.any(String),
+                    votes: 2,
+                });
             });
     });
     test("200: PATCH responds with updated review (removing votes)", () => {
@@ -390,19 +389,18 @@ describe("PATCH /api/reviews/:review_id", () => {
             .expect(200)
             .then(({ body }) => {
                 const { review } = body;
-                (review) => {
-                    expect(review).toMatchObject({
-                        review_id: 1,
-                        title: "Agricola",
-                        designer: "Uwe Rosenberg",
-                        owner: "mallionaire",
-                        review_img_url: "https://images.pexels.com/photos/974314/pexels-photo-974314.jpeg?w=700&h=700",
-                        review_body: "Farmyard fun!",
-                        category: "euro game",
-                        created_at: expect.any(String),
-                        votes: -99,
-                    });
-                };
+
+                expect(review).toMatchObject({
+                    review_id: 1,
+                    title: "Agricola",
+                    designer: "Uwe Rosenberg",
+                    owner: "mallionaire",
+                    review_img_url: "https://images.pexels.com/photos/974314/pexels-photo-974314.jpeg?w=700&h=700",
+                    review_body: "Farmyard fun!",
+                    category: "euro game",
+                    created_at: expect.any(String),
+                    votes: -99,
+                });
             });
     });
     test("404: PATCH responds with error message when given a valid id, which doesnt exist", () => {
@@ -485,7 +483,7 @@ describe("GET /api/users", () => {
     });
 });
 
-describe.only("GET /api", () => {
+describe("GET /api", () => {
     test("200: responds with an object containing all the endpoints and descriptions", () => {
         return request(app)
             .get("/api")

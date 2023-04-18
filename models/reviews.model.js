@@ -80,7 +80,7 @@ exports.updateReviewVotes = (inc_votes, review_id) => {
             [inc_votes, review_id]
         )
         .then((result) => {
-            return result.rows;
+            return result.rows[0];
         });
 };
 
