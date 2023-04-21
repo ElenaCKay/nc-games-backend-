@@ -28,6 +28,7 @@ exports.getReviews = async (req, res, next) => {
         try {
             const categories = await fetchCategories();
             const slugs = categories.map((category) => category.slug);
+            //added this
             if (category === "all") {
                 category = undefined;
             } else if (!slugs.includes(category)) {
