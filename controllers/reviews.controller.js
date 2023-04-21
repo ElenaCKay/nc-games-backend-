@@ -28,8 +28,9 @@ exports.getReviews = async (req, res, next) => {
         try {
             const categories = await fetchCategories();
             const slugs = categories.map((category) => category.slug);
-
-            if (!slugs.includes(category)) {
+            if (category === "all") {
+                category = undefined;
+            } else if (!slugs.includes(category)) {
                 res.status(404).send({ msg: "Invalid Category" });
                 return;
             }
