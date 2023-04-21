@@ -155,7 +155,7 @@ describe("GET /api/reviews", () => {
             });
     });
 
-    test.only("200: accepts an all category query", () => {
+    test("200: accepts an all category query", () => {
         return request(app)
             .get("/api/reviews?category=all")
             .expect(200)

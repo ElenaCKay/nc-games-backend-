@@ -19,7 +19,7 @@ exports.selectReview = (reviewId) => {
 };
 
 exports.fetchReviews = (category, sort_by = "created_at", order = "DESC") => {
-    if (sort_by && sort_by !== "created_at" && sort_by !== "votes") {
+    if (sort_by && sort_by !== "created_at" && sort_by !== "votes" && sort_by !== "comment_count") {
         return Promise.reject({ status: 400, msg: "Invalid Sort Query" });
     }
     if (order && order !== "ASC" && order !== "DESC") {
