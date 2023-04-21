@@ -22,7 +22,7 @@ exports.getReviewById = (req, res, next) => {
 };
 
 exports.getReviews = async (req, res, next) => {
-    const { category, sort_by, order } = req.query;
+    let { category, sort_by, order } = req.query;
 
     if (category) {
         try {

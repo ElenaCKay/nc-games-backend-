@@ -154,6 +154,17 @@ describe("GET /api/reviews", () => {
                 });
             });
     });
+
+    test.only("200: accepts an all category query", () => {
+        return request(app)
+            .get("/api/reviews?category=all")
+            .expect(200)
+            .then(({ body }) => {
+                const { reviews } = body;
+                expect(reviews).toHaveLength(13);
+            });
+    });
+
     test("200: Responds with array of objects sorted by a sort by query", () => {
         return request(app)
             .get("/api/reviews?sort_by=votes")
